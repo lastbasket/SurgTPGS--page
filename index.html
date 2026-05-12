@@ -1,0 +1,465 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="description" content="SurgTPGS++: Text-Promptable Gaussian Splatting with Dense Features Aggregation for Semantic 4D Surgical Scene Understanding.">
+  <meta name="keywords" content="SurgTPGS++, Gaussian Splatting, surgical scene understanding, text-promptable segmentation, 4D reconstruction, vision-language models">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>SurgTPGS++: Text-Promptable Gaussian Splatting with Dense Features Aggregation</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Castoro&family=Google+Sans:wght@400;500;700&family=Noto+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+
+  <style>
+    :root {
+      --accent: #1f6feb;
+      --accent-dark: #0b3d91;
+      --ink: #1f2937;
+      --muted: #58606f;
+      --paper: #f8fbff;
+      --line: #e7edf5;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      color: var(--ink);
+      font-family: "Google Sans", "Noto Sans", Arial, sans-serif;
+    }
+
+    .navbar {
+      border-bottom: 1px solid var(--line);
+      box-shadow: 0 2px 12px rgba(15, 23, 42, 0.04);
+    }
+
+    .hero.is-paper {
+      background:
+        radial-gradient(circle at 20% 0%, rgba(31, 111, 235, 0.12), transparent 34%),
+        linear-gradient(180deg, #f8fbff 0%, #ffffff 88%);
+    }
+
+    .publication-title {
+      line-height: 1.12;
+      letter-spacing: -0.03em;
+    }
+
+    .tagline {
+      color: var(--muted);
+      margin: 1rem auto 0;
+      max-width: 920px;
+    }
+
+    .venue-badge {
+      background: #eaf2ff;
+      border: 1px solid #cfe0ff;
+      border-radius: 999px;
+      color: var(--accent-dark);
+      display: inline-block;
+      font-weight: 700;
+      margin: 0.35rem;
+      padding: 0.35rem 0.9rem;
+    }
+
+    .publication-authors a {
+      color: var(--accent-dark);
+    }
+
+    .publication-links {
+      margin-top: 1.5rem;
+    }
+
+    .publication-links .button {
+      margin: 0.25rem;
+    }
+
+    .section {
+      padding-bottom: 3.5rem;
+      padding-top: 3.5rem;
+    }
+
+    .section.is-subtle {
+      background: var(--paper);
+    }
+
+    .section-title {
+      letter-spacing: -0.02em;
+      margin-bottom: 1.75rem;
+    }
+
+    .figure-panel {
+      margin-left: auto;
+      margin-right: auto;
+      max-width: 1180px;
+    }
+
+    .figure-panel img {
+      background: #ffffff;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      box-shadow: 0 18px 45px rgba(15, 23, 42, 0.08);
+      display: block;
+      height: auto;
+      margin-left: auto;
+      margin-right: auto;
+      max-width: 100%;
+    }
+
+    .caption {
+      color: var(--muted);
+      font-size: 1rem;
+      line-height: 1.65;
+      margin: 1rem auto 0;
+      max-width: 960px;
+    }
+
+    .content p {
+      line-height: 1.75;
+    }
+
+    .highlight-card,
+    .metric-card {
+      background: #ffffff;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      box-shadow: 0 12px 30px rgba(15, 23, 42, 0.05);
+      height: 100%;
+      padding: 1.4rem;
+    }
+
+    .highlight-card h3 {
+      color: var(--accent-dark);
+      margin-bottom: 0.65rem;
+    }
+
+    .metric-card {
+      text-align: center;
+    }
+
+    .metric-value {
+      color: var(--accent);
+      font-size: 2.25rem;
+      font-weight: 700;
+      letter-spacing: -0.04em;
+      line-height: 1;
+      margin-bottom: 0.55rem;
+    }
+
+    .metric-label {
+      color: var(--muted);
+      font-size: 0.95rem;
+      line-height: 1.4;
+    }
+
+    .comparison-card {
+      background: #ffffff;
+      border-left: 4px solid var(--accent);
+      border-radius: 14px;
+      box-shadow: 0 10px 26px rgba(15, 23, 42, 0.05);
+      height: 100%;
+      padding: 1.35rem;
+    }
+
+    .comparison-card strong {
+      color: var(--accent-dark);
+    }
+
+    .bibtex {
+      background: #0f172a;
+      border-radius: 14px;
+      color: #e5edf7;
+      font-size: 0.9rem;
+      overflow-x: auto;
+      padding: 1.25rem;
+      white-space: pre;
+    }
+
+    .footer {
+      background: #f6f8fb;
+      padding-bottom: 2.5rem;
+      padding-top: 2.5rem;
+    }
+  </style>
+</head>
+<body class="has-navbar-fixed-top">
+<nav class="navbar is-white is-fixed-top" role="navigation" aria-label="main navigation">
+  <div class="container">
+    <div class="navbar-brand">
+      <a class="navbar-item" href="#top"><strong>SurgTPGS++</strong></a>
+      <a class="navbar-burger" role="button" aria-label="menu" aria-expanded="false" data-target="site-nav">
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+      </a>
+    </div>
+    <div id="site-nav" class="navbar-menu">
+      <div class="navbar-end">
+        <a class="navbar-item" href="#abstract">Abstract</a>
+        <a class="navbar-item" href="#method">Method</a>
+        <a class="navbar-item" href="#results">Results</a>
+        <a class="navbar-item" href="#bibtex">BibTeX</a>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<main id="top">
+  <section class="hero is-paper is-medium">
+    <div class="hero-body">
+      <div class="container is-max-widescreen has-text-centered">
+        <h1 class="title is-1 publication-title">
+          SurgTPGS++: Text-Promptable Gaussian Splatting with Dense Features Aggregation for Semantic 4D Surgical Scene Understanding
+        </h1>
+        <p class="subtitle is-4 tagline">
+          A unified Gaussian Splatting framework for dynamic 4D reconstruction, real-time language-assisted 3D querying, and semantic segmentation in surgical scenes.
+        </p>
+
+        <div class="mt-5">
+          <span class="venue-badge">Extended work of SurgTPGS, MICCAI 2025</span>
+        </div>
+
+        <div class="is-size-5 publication-authors mt-5">
+          <span class="author-block"><a href="https://github.com/lastbasket">Yiming Huang</a><sup>1*</sup>,</span>
+          <span class="author-block"><a href="https://longbai-cuhk.github.io/">Long Bai</a><sup>1*</sup>,</span>
+          <span class="author-block"><a href="https://beileicui.github.io/">Beilei Cui</a><sup>1*</sup>,</span>
+          <span class="author-block"><a href="https://flaick.github.io/">Kun Yuan</a><sup>2,3</sup>,</span>
+          <span class="author-block"><a href="https://gkwang-cuhk.github.io/">Guankun Wang</a><sup>1</sup>,</span>
+          <span class="author-block"><a href="https://mobarakol.github.io/">Mobarak I. Hoque</a><sup>4</sup>,</span>
+          <span class="author-block"><a href="https://camma.unistra.fr/npadoy/">Nicolas Padoy</a><sup>3</sup>,</span>
+          <span class="author-block"><a href="https://www.professoren.tum.de/en/navab-nassir">Nassir Navab</a><sup>2</sup>,</span>
+          <span class="author-block"><a href="https://www.ee.cuhk.edu.hk/ren/">Hongliang Ren</a><sup>1&dagger;</sup></span>
+        </div>
+
+        <div class="is-size-6 publication-authors mt-4">
+          <span><sup>1</sup>The Chinese University of Hong Kong</span> &nbsp;
+          <span><sup>2</sup>Technical University of Munich</span> &nbsp;
+          <span><sup>3</sup>University of Strasbourg &amp; IHU Strasbourg</span> &nbsp;
+          <span><sup>4</sup>The University of Manchester</span>
+          <br>
+          <span><sup>*</sup>Equal contribution, <sup>&dagger;</sup>Corresponding author</span>
+        </div>
+
+        <div class="publication-links">
+          <a href="" class="button is-dark is-rounded" target="_blank" rel="noopener">
+            <span class="icon"><i class="fas fa-file-pdf"></i></span>
+            <span>Paper</span>
+          </a>
+          <a href="https://github.com/lastbasket/SurgTPGS" class="button is-dark is-rounded" target="_blank" rel="noopener">
+            <span class="icon"><i class="fab fa-github"></i></span>
+            <span>Code</span>
+          </a>
+          <a href="" class="button is-dark is-rounded" target="_blank" rel="noopener">
+            <span class="icon"><i class="ai ai-arxiv"></i></span>
+            <span>MICCAI Version</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container is-max-widescreen">
+      <figure class="figure-panel has-text-centered">
+        <img src="./static/images/Figure_1.png" alt="SurgTPGS++ teaser showing 4D reconstruction, vision-language query, and text-promptable 3D segmentation.">
+        <figcaption class="caption">
+          <strong>SurgTPGS++</strong> complements the limitations of standalone 4D Gaussian reconstruction, vision-language models, and segmentation networks by unifying real-time novel-view rendering, language-based querying, and semantic 3D segmentation.
+        </figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <section class="section is-subtle" id="abstract">
+    <div class="container is-max-desktop">
+      <h2 class="title is-3 has-text-centered section-title">Abstract</h2>
+      <div class="content has-text-justified">
+        <p>
+          With the growing demand for surgical embodied intelligence, accurate semantic understanding of 3D surgical scenes with language-based interaction has become increasingly important. Such capability can assist surgeons in identifying and interacting with surgical instruments and anatomical structures during pre-operative planning and real-time intra-operative guidance. However, existing methods typically address surgical vision-language modeling, 3D reconstruction, and semantic segmentation as separate tasks, leaving real-time language-assisted 3D querying in dynamic surgical scenes largely unexplored.
+        </p>
+        <p>
+          We present <strong>SurgTPGS++</strong>, a Gaussian Splatting pipeline for text-promptable 3D surgical scene understanding. SurgTPGS++ introduces semantic feature aggregation (SFA) to extract and integrate rich vision-language features from multi-domain VLMs, embeds the aggregated features into semantic-aware 3D Gaussians, and applies semantic-aware deformation tracking (SADT) to model temporal deformation of both texture and semantic features. A codebook-based query (CQ) module then matches rendered semantic features with text-codebook embeddings, enabling real-time language-assisted 3D segmentation from arbitrary viewpoints and timestamps.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="highlights">
+    <div class="container is-max-widescreen">
+      <h2 class="title is-3 has-text-centered section-title">Highlights</h2>
+      <div class="columns is-multiline">
+        <div class="column is-one-quarter-desktop is-half-tablet">
+          <div class="highlight-card">
+            <h3 class="title is-5">Unified Surgical 4D Understanding</h3>
+            <p>SurgTPGS++ jointly represents appearance, geometry, dynamics, and language-aligned semantics in one deformable Gaussian scene.</p>
+          </div>
+        </div>
+        <div class="column is-one-quarter-desktop is-half-tablet">
+          <div class="highlight-card">
+            <h3 class="title is-5">Semantic Feature Aggregation</h3>
+            <p>SFA fuses patch-level CLIP features with intermediate ViT features to produce dense semantic supervision without explicit mask proposals.</p>
+          </div>
+        </div>
+        <div class="column is-one-quarter-desktop is-half-tablet">
+          <div class="highlight-card">
+            <h3 class="title is-5">Semantic-Aware Deformation</h3>
+            <p>SADT deforms semantic features alongside texture and geometry, preserving temporal consistency under tissue and tool motion.</p>
+          </div>
+        </div>
+        <div class="column is-one-quarter-desktop is-half-tablet">
+          <div class="highlight-card">
+            <h3 class="title is-5">Codebook-Based Query</h3>
+            <p>CQ converts multi-text prompting into a stable in-codebook assignment, enabling efficient real-time 3D segmentation.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section is-subtle">
+    <div class="container is-max-widescreen">
+      <h2 class="title is-3 has-text-centered section-title">Dynamic Text-Promptable Segmentation</h2>
+      <figure class="figure-panel has-text-centered">
+        <img src="./static/images/Figure_2.png" alt="SurgTPGS++ showcase of consistent 3D text-promptable segmentation in a dynamic surgical scene.">
+        <figcaption class="caption">
+          SurgTPGS++ provides consistent 3D text-promptable segmentation over time while maintaining real-time novel-view rendering above 100 FPS in dynamic surgical scenes.
+        </figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <section class="section" id="method">
+    <div class="container is-max-widescreen">
+      <h2 class="title is-3 has-text-centered section-title">Pipeline</h2>
+      <figure class="figure-panel has-text-centered">
+        <img src="./static/images/Figure_3.png" alt="Overview of the SurgTPGS++ pipeline with SFA, SADT, and CQ modules.">
+        <figcaption class="caption">
+          The pipeline extracts dense semantic features with SFA, optimizes a deformable semantic Gaussian representation with SADT, and performs text-promptable 3D segmentation by matching rendered semantic features against a text-codebook through CQ.
+        </figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <section class="section is-subtle">
+    <div class="container is-max-widescreen">
+      <h2 class="title is-3 has-text-centered section-title">Extended From SurgTPGS</h2>
+      <div class="columns">
+        <div class="column">
+          <div class="comparison-card">
+            <p><strong>Dense feature aggregation.</strong> The extended work reduces reliance on SAM-based region proposals and simple VLM finetuning by aggregating multi-level VLM features into dense language-aligned maps.</p>
+          </div>
+        </div>
+        <div class="column">
+          <div class="comparison-card">
+            <p><strong>Dynamic semantic tracking.</strong> Semantic features are embedded into the Gaussian representation and tracked through deformation, improving 4D consistency for surgical tools and deformable anatomy.</p>
+          </div>
+        </div>
+        <div class="column">
+          <div class="comparison-card">
+            <p><strong>Efficient multi-text querying.</strong> CQ performs a single codebook matching operation instead of repeated prompt-wise querying, increasing query speed from 67.5 FPS to 246.64 FPS.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="results">
+    <div class="container is-max-widescreen">
+      <h2 class="title is-3 has-text-centered section-title">Results</h2>
+      <div class="columns is-multiline">
+        <div class="column is-2-desktop is-one-third-tablet">
+          <div class="metric-card">
+            <div class="metric-value">89.23</div>
+            <div class="metric-label">mIoU on CholecSeg8K</div>
+          </div>
+        </div>
+        <div class="column is-2-desktop is-one-third-tablet">
+          <div class="metric-card">
+            <div class="metric-value">60.29</div>
+            <div class="metric-label">mIoU on EndoVis18</div>
+          </div>
+        </div>
+        <div class="column is-2-desktop is-one-third-tablet">
+          <div class="metric-card">
+            <div class="metric-value">70.57</div>
+            <div class="metric-label">mIoU on CaDISv2</div>
+          </div>
+        </div>
+        <div class="column is-2-desktop is-one-third-tablet">
+          <div class="metric-card">
+            <div class="metric-value">190</div>
+            <div class="metric-label">FPS rendering speed</div>
+          </div>
+        </div>
+        <div class="column is-2-desktop is-one-third-tablet">
+          <div class="metric-card">
+            <div class="metric-value">246.64</div>
+            <div class="metric-label">FPS query speed</div>
+          </div>
+        </div>
+        <div class="column is-2-desktop is-one-third-tablet">
+          <div class="metric-card">
+            <div class="metric-value">3 min</div>
+            <div class="metric-label">Training time on EndoVis18</div>
+          </div>
+        </div>
+      </div>
+
+      <figure class="figure-panel has-text-centered mt-6">
+        <h3 class="title is-4">Quantitative Comparison</h3>
+        <img src="./static/images/Figure_4.png" alt="Box plot of text-query segmentation performance across CholecSeg8K, EndoVis18, and CaDISv2.">
+        <figcaption class="caption">
+          Across CholecSeg8K, EndoVis18, and CaDISv2, SurgTPGS++ achieves higher and more compact mIoU distributions than LangSplat, OpenGaussian, DGD, and SurgTPGS, indicating stronger robustness across surgical scenes and query categories.
+        </figcaption>
+      </figure>
+
+      <figure class="figure-panel has-text-centered mt-6">
+        <h3 class="title is-4">Qualitative Comparison</h3>
+        <img src="./static/images/Figure_5.png" alt="Qualitative comparison of text-promptable segmentation results across surgical datasets.">
+        <figcaption class="caption">
+          Qualitative results on CholecSeg8K, EndoVis18, and CaDISv2 show that SurgTPGS++ produces cleaner semantic responses, smoother object boundaries, and more complete queried regions in novel views.
+        </figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <section class="section is-subtle" id="bibtex">
+    <div class="container is-max-desktop">
+      <h2 class="title is-3 has-text-centered section-title">BibTeX</h2>
+      <pre class="bibtex"><code>@article{huang2026surgtpgsplusplus,
+  title={SurgTPGS++: Text-Promptable Gaussian Splatting with Dense Features Aggregation for Semantic 4D Surgical Scene Understanding},
+  author={Huang, Yiming and Bai, Long and Cui, Beilei and Yuan, Kun and Wang, Guankun and Hoque, Mobarak I. and Padoy, Nicolas and Navab, Nassir and Ren, Hongliang},
+  journal={xxxxxx},
+  year={2026}
+}</code></pre>
+    </div>
+  </section>
+</main>
+
+<footer class="footer">
+  <div class="container is-max-desktop has-text-centered">
+    <p>
+      Website template adapted from <a href="https://github.com/nerfies/nerfies.github.io" target="_blank" rel="noopener">Nerfies</a>.
+      Project code is available at <a href="https://github.com/lastbasket/SurgTPGS" target="_blank" rel="noopener">github.com/lastbasket/SurgTPGS</a>.
+    </p>
+  </div>
+</footer>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    var burger = document.querySelector(".navbar-burger");
+    var menu = document.getElementById("site-nav");
+
+    if (burger && menu) {
+      burger.addEventListener("click", function () {
+        burger.classList.toggle("is-active");
+        menu.classList.toggle("is-active");
+      });
+    }
+  });
+</script>
+</body>
+</html>
